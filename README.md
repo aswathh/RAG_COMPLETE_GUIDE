@@ -2780,7 +2780,7 @@ RAG in 6 lines:
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:48CAE4,100:6C63FF&height=100&section=footer" width="100%" alt="footer"/>
 
-**Built with ❤️ by a Senior AI Engineer for Freshers**  
+**Built for Freshers who start this RAG**  
 *Star ⭐ this repo if it helped you!*
 
 [![GitHub](https://img.shields.io/badge/GitHub-aswathh-181717?style=for-the-badge&logo=github)](https://github.com/aswathh)
