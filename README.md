@@ -14,41 +14,38 @@
 
 <br/>
 
-> **🎓 KT Session:** Senior AI Engineer → Fresher  
-> **📋 Format:** Step-by-step, Chat style, Code-first  
-> **⏱️ Read time:** ~25 minutes  
 
 </div>
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
 | # | Topic | Jump |
 |---|-------|------|
-| 1 | 🤔 The Problem RAG Solves | [↗ Go](#-the-problem-rag-solves) |
-| 2 | 💡 What is RAG? | [↗ Go](#-what-is-rag) |
-| 3 | 🔄 The Two Phases | [↗ Go](#-the-two-phases-of-rag) |
-| 4 | 🧩 Types of RAG | [↗ Go](#-types-of-rag--overview) |
-| 5 | 🔹 Naive RAG | [↗ Go](#-type-1--naive-rag) |
-| 6 | 🔹 Advanced RAG | [↗ Go](#-type-2--advanced-rag) |
-| 7 | 🔹 Modular RAG | [↗ Go](#-type-3--modular-rag) |
-| 8 | 🔹 Self-RAG | [↗ Go](#-type-4--self-rag) |
-| 9 | 🔹 HyDE RAG | [↗ Go](#-type-5--hyde-rag) |
-| 10 | 🔹 GraphRAG | [↗ Go](#-type-6--graphrag) |
-| 11 | 🔹 Agentic RAG | [↗ Go](#-type-7--agentic-rag) |
-| 12 | 🔹 Contextual RAG | [↗ Go](#-type-8--contextual-rag) |
-| 13 | 🔹 Hybrid RAG | [↗ Go](#-type-9--hybrid-rag) |
-| 14 | 🔹 Corrective RAG | [↗ Go](#-type-10--corrective-rag-crag) |
-| 15 | 🐛 Common Issues & Fixes | [↗ Go](#-common-issues--fixes) |
-| 16 | 🎯 Interview Questions | [↗ Go](#-interview-questions--answers) |
-| 17 | 🗺️ Choosing the Right RAG | [↗ Go](#️-choosing-the-right-rag) |
-| 18 | 📊 Evaluation with RAGAS | [↗ Go](#-evaluation-with-ragas) |
-| 19 | ⚡ Quick Start | [↗ Go](#-quick-start) |
+| 1 | The Problem RAG Solves | [↗ Go](#-the-problem-rag-solves) |
+| 2 | What is RAG? | [↗ Go](#-what-is-rag) |
+| 3 | The Two Phases | [↗ Go](#-the-two-phases-of-rag) |
+| 4 | Types of RAG | [↗ Go](#-types-of-rag--overview) |
+| 5 | Naive RAG | [↗ Go](#-type-1--naive-rag) |
+| 6 | Advanced RAG | [↗ Go](#-type-2--advanced-rag) |
+| 7 | Modular RAG | [↗ Go](#-type-3--modular-rag) |
+| 8 | Self-RAG | [↗ Go](#-type-4--self-rag) |
+| 9 | HyDE RAG | [↗ Go](#-type-5--hyde-rag) |
+| 10 | GraphRAG | [↗ Go](#-type-6--graphrag) |
+| 11 | Agentic RAG | [↗ Go](#-type-7--agentic-rag) |
+| 12 | Contextual RAG | [↗ Go](#-type-8--contextual-rag) |
+| 13 | Hybrid RAG | [↗ Go](#-type-9--hybrid-rag) |
+| 14 | Corrective RAG | [↗ Go](#-type-10--corrective-rag-crag) |
+| 15 | Common Issues & Fixes | [↗ Go](#-common-issues--fixes) |
+| 16 | Interview Questions | [↗ Go](#-interview-questions--answers) |
+| 17 | Choosing the Right RAG | [↗ Go](#️-choosing-the-right-rag) |
+| 18 | Evaluation with RAGAS | [↗ Go](#-evaluation-with-ragas) |
+| 19 | Quick Start | [↗ Go](#-quick-start) |
 
 ---
 
-## 🤔 The Problem RAG Solves
+## The Problem RAG Solves
 
 <details open>
 <summary><b>Click to expand — Understanding the core problem</b></summary>
@@ -72,14 +69,14 @@
 ### Real-world Example
 
 ```
-👤 You:  "What happened in our company's Q3 2024 board meeting?"
-🤖 LLM:  [Confidently makes something up] ← HALLUCINATION!
+You:  "What happened in our company's Q3 2024 board meeting?"
+LLM:  [Confidently makes something up] ← HALLUCINATION!
 
-👤 You:  "What's the latest LangChain version released yesterday?"  
-🤖 LLM:  "I don't have information beyond my training cutoff." ← STALE!
+You:  "What's the latest LangChain version released yesterday?"  
+LLM:  "I don't have information beyond my training cutoff." ← STALE!
 
-👤 You:  "What does our internal HR Policy say about remote work?"
-🤖 LLM:  "I don't have access to your internal documents." ← NO ACCESS!
+You:  "What does our internal HR Policy say about remote work?"
+LLM:  "I don't have access to your internal documents." ← NO ACCESS!
 ```
 
 ### The RAG Solution
@@ -100,7 +97,7 @@ With RAG    → LLM is a student who can OPEN A TEXTBOOK during the exam
 
 ---
 
-## 💡 What is RAG?
+## What is RAG?
 
 <details open>
 <summary><b>Click to expand — Core definition & architecture</b></summary>
@@ -114,17 +111,17 @@ With RAG    → LLM is a student who can OPEN A TEXTBOOK during the exam
 
 ```mermaid
 flowchart LR
-    A[📄 Your Documents\nPDF, Word, Web] --> B[🔪 Chunker\nSplit into pieces]
-    B --> C[🔢 Embedder\nText → Vectors]
-    C --> D[(🗄️ Vector DB\nFAISS / Chroma\nPinecone)]
+    A[Your Documents\nPDF, Word, Web] --> B[Chunker\nSplit into pieces]
+    B --> C[Embedder\nText → Vectors]
+    C --> D[(Vector DB\nFAISS / Chroma\nPinecone)]
 
-    E[👤 User Query] --> F[🔢 Embed Query]
-    F --> G{🔍 Similarity\nSearch}
+    E[User Query] --> F[Embed Query]
+    F --> G{Similarity\nSearch}
     D --> G
-    G --> H[📋 Top-K Chunks\nRelevant context]
-    H --> I[🧠 LLM\nGroq / OpenAI\nClaude]
+    G --> H[Top-K Chunks\nRelevant context]
+    H --> I[LLM\nGroq / OpenAI\nClaude]
     E --> I
-    I --> J[✅ Grounded\nAnswer]
+    I --> J[Grounded\nAnswer]
 
     style A fill:#e8f5e9,stroke:#4caf50
     style D fill:#e3f2fd,stroke:#2196f3
