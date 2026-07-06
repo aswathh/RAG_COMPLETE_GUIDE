@@ -144,7 +144,7 @@ flowchart LR
 
 ---
 
-## 🔄 The Two Phases of RAG
+## The Two Phases of RAG
 
 <details open>
 <summary><b>Click to expand — Indexing vs Query phases</b></summary>
@@ -153,13 +153,13 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-    participant D as 📄 Documents
-    participant C as 🔪 Chunker
-    participant E as 🔢 Embedder
-    participant V as 🗄️ Vector DB
-    participant U as 👤 User
-    participant R as 🔍 Retriever
-    participant L as 🧠 LLM
+    participant D as Documents
+    participant C as Chunker
+    participant E as Embedder
+    participant V as Vector DB
+    participant U as User
+    participant R as Retriever
+    participant L as LLM
 
     Note over D,V: ━━━━━ PHASE 1: INDEXING (Offline, runs once) ━━━━━
 
@@ -271,7 +271,7 @@ for doc in response["source_documents"]:
 
 ---
 
-## 🧩 Types of RAG — Overview
+## Types of RAG — Overview
 
 ```mermaid
 mindmap
@@ -397,8 +397,8 @@ chain = RetrievalQA.from_chain_type(
 )
 
 result = chain.invoke({"query": "What is the refund policy?"})
-print("📝 Answer:", result["result"])
-print("\n📚 Sources:", [d.metadata for d in result["source_documents"]])
+print("Answer:", result["result"])
+print("\nSources:", [d.metadata for d in result["source_documents"]])
 ```
 
 </details>
@@ -534,7 +534,7 @@ def rerank_documents(query: str, documents: list, top_n: int = 3) -> list:
     scored_docs = list(zip(scores, documents))
     scored_docs.sort(key=lambda x: x[0], reverse=True)
     
-    print("\n📊 Reranking scores:")
+    print("\nReranking scores:")
     for score, doc in scored_docs[:top_n]:
         print(f"  Score {score:.3f}: {doc.page_content[:80]}...")
     
@@ -774,7 +774,7 @@ flowchart TD
     E --> F{Answer Grounded?\nToken: ISSUP}
     F -- GROUNDED --> G{Answers Question?\nToken: ISUSE}
     F -- HALLUCINATED --> E2[Regenerate Answer]
-    G -- USEFUL --> H[✅ Return Answer]
+    G -- USEFUL --> H[ Return Answer]
     G -- NOT USEFUL --> A2[Rethink &\nRetrieve Again]
 ```
 
@@ -859,18 +859,18 @@ def self_rag_pipeline(question: str, retriever, llm, max_retries: int = 3):
     Full Self-RAG pipeline with all 4 graders.
     Retries if any grader fails.
     """
-    print(f"\n🔍 Question: {question}")
+    print(f"\nQuestion: {question}")
     
     # Check if retrieval needed
     needs_retrieval = retrieval_grader.invoke({"question": question})
-    print(f"📡 Need retrieval? {needs_retrieval}")
+    print(f"Need retrieval? {needs_retrieval}")
     
     if needs_retrieval.strip() == "NO":
         answer = llm.invoke(f"Answer this: {question}").content
         return {"answer": answer, "source": "parametric_knowledge"}
     
     for attempt in range(max_retries):
-        print(f"\n🔄 Attempt {attempt + 1}/{max_retries}")
+        print(f"\nAttempt {attempt + 1}/{max_retries}")
         
         # Step 1: Retrieve
         docs = retriever.get_relevant_documents(question)
@@ -884,12 +884,12 @@ def self_rag_pipeline(question: str, retriever, llm, max_retries: int = 3):
             })
             if "RELEVANT" in relevance:
                 relevant_docs.append(doc)
-                print(f"  ✅ Relevant doc found")
+                print(f"  Relevant doc found")
             else:
-                print(f"  ❌ Irrelevant doc filtered out")
+                print(f"  Irrelevant doc filtered out")
         
         if not relevant_docs:
-            print("  ⚠️ No relevant docs found, retrying...")
+            print("  No relevant docs found, retrying...")
             continue
         
         # Step 3: Generate answer
@@ -903,10 +903,10 @@ def self_rag_pipeline(question: str, retriever, llm, max_retries: int = 3):
             "documents": context,
             "answer": answer
         })
-        print(f"  🧠 Grounded? {groundedness}")
+        print(f"  Grounded? {groundedness}")
         
         if "HALLUCINATED" in groundedness:
-            print("  ⚠️ Hallucination detected, regenerating...")
+            print("  Hallucination detected, regenerating...")
             continue
         
         # Step 5: Check answer quality
@@ -914,7 +914,7 @@ def self_rag_pipeline(question: str, retriever, llm, max_retries: int = 3):
             "question": question,
             "answer": answer
         })
-        print(f"  🎯 Useful? {usefulness}")
+        print(f"  Useful? {usefulness}")
         
         if "USEFUL" in usefulness:
             return {
@@ -930,7 +930,7 @@ result = self_rag_pipeline(
     "What is our company's maternity leave policy?",
     retriever, llm
 )
-print(f"\n✅ Final Answer: {result['answer']}")
+print(f"\nFinal Answer: {result['answer']}")
 ```
 
 </details>
@@ -1003,11 +1003,11 @@ def hyde_retrieve(question: str, vectorstore, k: int = 5):
     2. Embed the hypothetical document
     3. Use that embedding to search the vector DB
     """
-    print(f"📝 Original question: {question}")
+    print(f"Original question: {question}")
     
     # Generate hypothetical answer
     hypothetical_doc = hyde_chain.run(question=question)
-    print(f"\n🤔 Hypothetical document generated:")
+    print(f"\nHypothetical document generated:")
     print(f"   {hypothetical_doc[:150]}...")
     
     # Embed the hypothetical doc (not the question!)
@@ -1018,7 +1018,7 @@ def hyde_retrieve(question: str, vectorstore, k: int = 5):
         hyp_embedding, k=k
     )
     
-    print(f"\n📚 Retrieved {len(similar_docs)} documents using HyDE")
+    print(f"\nRetrieved {len(similar_docs)} documents using HyDE")
     return similar_docs, hypothetical_doc
 
 # ── STEP 3: Generate final answer ──────────────────
@@ -1044,7 +1044,7 @@ answer, sources = hyde_rag_pipeline(
     "maternity leave",    # ← very short, vague query
     vectorstore, llm
 )
-print(f"\n✅ Answer: {answer}")
+print(f"\nAnswer: {answer}")
 ```
 
 ### HyDE vs Standard Comparison
@@ -1168,10 +1168,10 @@ queries = [
 ]
 
 for q in queries:
-    print(f"\n❓ Query: {q}")
+    print(f"\nQuery: {q}")
     result = chain.invoke({"query": q})
-    print(f"🔍 Cypher: {result['intermediate_steps'][0]['query']}")
-    print(f"✅ Answer: {result['result']}")
+    print(f"Cypher: {result['intermediate_steps'][0]['query']}")
+    print(f"Answer: {result['result']}")
 ```
 
 ### Code — Hybrid GraphRAG (Graph + Vector)
@@ -1384,12 +1384,12 @@ complex_queries = [
 
 for query in complex_queries:
     print(f"\n{'='*60}")
-    print(f"❓ Query: {query}")
+    print(f"Query: {query}")
     result = agent_executor.invoke({
         "input": query,
         "chat_history": []
     })
-    print(f"✅ Answer: {result['output']}")
+    print(f"Answer: {result['output']}")
 ```
 
 </details>
@@ -1421,7 +1421,7 @@ Original Document:
 After chunking, one chunk might be:
   "These require a medical certificate after 3 consecutive days."
 
-❌ Problem: Which policy? Which type of leave? 
+Problem: Which policy? Which type of leave? 
    The chunk has LOST all context!
 
 SOLUTION: Prepend context to each chunk BEFORE indexing
@@ -1497,7 +1497,7 @@ def create_contextual_chunks(documents: list, max_doc_tokens: int = 8000):
         if len(full_text) > max_doc_tokens * 4:  # rough char estimate
             full_text = full_text[:max_doc_tokens * 4] + "\n[Document truncated...]"
         
-        print(f"📄 Processing: {doc.metadata.get('source', 'unknown')}")
+        print(f"Processing: {doc.metadata.get('source', 'unknown')}")
         print(f"   Chunks to contextualize: {len(chunks)}")
         
         for i, chunk in enumerate(chunks):
@@ -1518,13 +1518,13 @@ def create_contextual_chunks(documents: list, max_doc_tokens: int = 8000):
                 chunk.metadata["context"] = context.strip()
                 
                 contextual_chunks.append(chunk)
-                print(f"   ✅ Chunk {i+1}/{len(chunks)} contextualized")
+                print(f"   Chunk {i+1}/{len(chunks)} contextualized")
                 
                 # Rate limiting for API calls
                 time.sleep(0.5)
                 
             except Exception as e:
-                print(f"   ⚠️ Failed to contextualize chunk {i}: {e}")
+                print(f"   Failed to contextualize chunk {i}: {e}")
                 # Fall back to original chunk
                 contextual_chunks.append(chunk)
     
@@ -1538,7 +1538,7 @@ loader = PyPDFLoader("HR_Policy_2024.pdf")
 raw_docs = loader.load()
 
 # Create contextual chunks
-print("🔄 Creating contextual chunks (this takes a while)...")
+print("Creating contextual chunks (this takes a while)...")
 contextual_chunks = create_contextual_chunks(raw_docs)
 
 # Index into vector DB
@@ -1549,15 +1549,15 @@ contextual_vectorstore = Chroma.from_documents(
     collection_name="contextual_rag"
 )
 
-print(f"\n✅ Indexed {len(contextual_chunks)} contextual chunks")
+print(f"\nIndexed {len(contextual_chunks)} contextual chunks")
 
 # Verify the improvement
 retriever = contextual_vectorstore.as_retriever(search_kwargs={"k": 3})
 docs = retriever.get_relevant_documents("medical certificate requirement")
 
-print("\n📋 Sample retrieved chunk (with context):")
+print("\nSample retrieved chunk (with context):")
 print(docs[0].page_content[:400])
-print("\n📋 Original chunk (without context):")
+print("\nOriginal chunk (without context):")
 print(docs[0].metadata.get("original_content", "N/A")[:200])
 ```
 
@@ -1577,10 +1577,10 @@ print(docs[0].metadata.get("original_content", "N/A")[:200])
 | | Sparse (BM25) | Dense (Embeddings) | Hybrid |
 |---|---|---|---|
 | **Method** | Keyword matching | Semantic similarity | Both combined |
-| **Speed** | ⚡ Very fast | 🐢 Slower | 🔄 Medium |
-| **Semantic understanding** | ❌ None | ✅ Yes | ✅ Yes |
-| **Exact keyword match** | ✅ Perfect | ❌ May miss | ✅ Yes |
-| **Out-of-vocab words** | ❌ Misses | ✅ Handles | ✅ Handles |
+| **Speed** | Very fast | Slower | Medium |
+| **Semantic understanding** | None | Yes | Yes |
+| **Exact keyword match** | Perfect | May miss | Yes |
+| **Out-of-vocab words** | Misses | Handles | Handles |
 | **Best for** | Legal/medical exact terms | General QA | Production systems |
 
 ### When to use
@@ -1739,11 +1739,11 @@ def corrective_rag(question: str, retriever, llm):
     """
     CRAG: Corrective RAG with web search fallback
     """
-    print(f"\n🔍 CRAG Pipeline: {question}")
+    print(f"\nCRAG Pipeline: {question}")
     
     # Step 1: Retrieve from vector DB
     docs = retriever.get_relevant_documents(question)
-    print(f"📚 Retrieved {len(docs)} docs from vector DB")
+    print(f"Retrieved {len(docs)} docs from vector DB")
     
     # Step 2: Grade each document
     correct_docs = []
@@ -1768,7 +1768,7 @@ def corrective_rag(question: str, retriever, llm):
     # Step 3: Web search if needed
     web_docs = []
     if needs_web or not correct_docs:
-        print("🌐 Falling back to web search...")
+        print("Falling back to web search...")
         web_query = query_rewrite_for_web(question)
         print(f"  Web query: {web_query}")
         
@@ -1808,15 +1808,15 @@ result = corrective_rag(
     "What is the latest LangChain version?",  # likely not in your docs → web fallback
     retriever, llm
 )
-print(f"\n✅ Answer: {result['answer']}")
-print(f"🌐 Used web: {result['used_web']}")
+print(f"\nAnswer: {result['answer']}")
+print(f"Used web: {result['used_web']}")
 ```
 
 </details>
 
 ---
 
-## 🐛 Common Issues & Fixes
+## Common Issues & Fixes
 
 <details open>
 <summary><b>Click to expand — The problems you WILL face in production</b></summary>
@@ -2076,7 +2076,7 @@ def load_docs_with_metadata(file_paths: list) -> list:
 # In your chain, return source documents:
 result = chain.invoke({"query": question})
 print("Answer:", result["result"])
-print("\n📌 Sources:")
+print("\nSources:")
 for doc in result["source_documents"]:
     m = doc.metadata
     print(f"  → {m['filename']}, Page {m.get('page', '?')}")
@@ -2087,7 +2087,7 @@ for doc in result["source_documents"]:
 
 ---
 
-## 🎯 Interview Questions & Answers
+## Interview Questions & Answers
 
 <details open>
 <summary><b>Click to expand — Complete Q&A with senior-level answers</b></summary>
@@ -2169,7 +2169,7 @@ print(f"Cosine similarity: {cosine:.3f}")      # 1.0 (says they're identical!)
 # "Happy" → [0.1, 0.5, 0.3]
 # "Happy Happy Happy" → [0.3, 1.5, 0.9]  ← same meaning, just repeated
 # Euclidean says these are different (different magnitude)
-# Cosine says these are identical (same direction) ✅ CORRECT!
+# Cosine says these are identical (same direction) CORRECT!
 ```
 
 ---
@@ -2292,7 +2292,7 @@ results = evaluate(dataset, metrics=[
     faithfulness, answer_relevancy, context_recall, context_precision
 ])
 
-print("\n📊 RAG Evaluation Results:")
+print("\nRAG Evaluation Results:")
 print(f"  Faithfulness:       {results['faithfulness']:.3f}  {'✅' if results['faithfulness'] > 0.8 else '⚠️'}")
 print(f"  Answer Relevancy:   {results['answer_relevancy']:.3f}  {'✅' if results['answer_relevancy'] > 0.8 else '⚠️'}")
 print(f"  Context Recall:     {results['context_recall']:.3f}  {'✅' if results['context_recall'] > 0.8 else '⚠️'}")
@@ -2368,7 +2368,7 @@ print(f"Returned chunk size: {len(results[0].page_content)}")  # large parent!
 
 ---
 
-## 🗺️ Choosing the Right RAG
+## Choosing the Right RAG
 
 <details open>
 <summary><b>Click to expand — Decision tree for picking your RAG strategy</b></summary>
@@ -2500,7 +2500,7 @@ results = evaluate(
 )
 
 print("\n" + "="*50)
-print("📊 RAG EVALUATION RESULTS")
+print("RAG EVALUATION RESULTS")
 print("="*50)
 print(f"Faithfulness:       {results['faithfulness']:.3f}  (Is answer grounded?)")
 print(f"Answer Relevancy:   {results['answer_relevancy']:.3f}  (Does it answer the Q?)")
@@ -2534,7 +2534,7 @@ interpretation = {
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 <details>
 <summary><b>Click to expand — Get a RAG running in under 10 minutes</b></summary>
@@ -2636,7 +2636,7 @@ def load_documents(docs_dir: str) -> list:
         else:
             continue
         docs.extend(loader.load())
-        print(f"  ✅ Loaded: {filename}")
+        print(f"  Loaded: {filename}")
     return docs
 
 def format_docs(docs: list) -> str:
@@ -2652,13 +2652,13 @@ def build_rag():
     
     # Load existing index or create new one
     if os.path.exists(CHROMA_DIR) and os.listdir(CHROMA_DIR):
-        print("📚 Loading existing index...")
+        print("Loading existing index...")
         vectorstore = Chroma(
             persist_directory=CHROMA_DIR,
             embedding_function=embeddings
         )
     else:
-        print("🔄 Building new index...")
+        print("Building new index...")
         docs = load_documents(DOCS_DIR)
         
         splitter = RecursiveCharacterTextSplitter(
@@ -2666,13 +2666,13 @@ def build_rag():
             chunk_overlap=CHUNK_OVERLAP
         )
         chunks = splitter.split_documents(docs)
-        print(f"  ✅ Created {len(chunks)} chunks")
+        print(f"  Created {len(chunks)} chunks")
         
         vectorstore = Chroma.from_documents(
             chunks, embeddings, persist_directory=CHROMA_DIR
         )
         vectorstore.persist()
-        print(f"  ✅ Indexed and saved")
+        print(f"  Indexed and saved")
     
     retriever = vectorstore.as_retriever(
         search_type="similarity",
@@ -2708,21 +2708,21 @@ Answer:""")
 
 # ── Main ──────────────────────────────────────────────
 def main():
-    print("🚀 RAG System Starting...")
+    print("RAG System Starting...")
     chain, retriever = build_rag()
     
-    print("\n✅ Ready! Type your question (or 'quit' to exit)\n")
+    print("\nReady! Type your question (or 'quit' to exit)\n")
     
     while True:
-        question = input("❓ You: ").strip()
+        question = input("You: ").strip()
         if question.lower() in ["quit", "exit", "q"]:
             break
         if not question:
             continue
         
-        print("\n🤔 Thinking...")
+        print("\nThinking...")
         answer = chain.invoke(question)
-        print(f"\n🤖 Answer: {answer}\n")
+        print(f"\nAnswer: {answer}\n")
         print("-" * 60)
 
 if __name__ == "__main__":
@@ -2733,8 +2733,8 @@ if __name__ == "__main__":
 # Add a test document and run!
 echo "Company Policy: All employees get 12 casual leaves per year." > data/policy.txt
 python main.py
-# ❓ You: How many casual leaves do employees get?
-# 🤖 Answer: Employees get 12 casual leaves per year. [Source: policy.txt]
+# You: How many casual leaves do employees get?
+# Answer: Employees get 12 casual leaves per year. [Source: policy.txt]
 ```
 
 </details>
