@@ -174,7 +174,7 @@ sequenceDiagram
     R->>V: Similarity search (top-k)
     V-->>R: Relevant chunks
     R->>L: Query + Context chunks
-    L-->>U: Grounded answer ✅
+    L-->>U: Grounded answer 
 ```
 
 ### Phase 1: Indexing (Offline)
@@ -192,7 +192,7 @@ from langchain.vectorstores import Chroma
 # Step 1: Load documents
 loader = DirectoryLoader("./docs/", glob="**/*.pdf", loader_cls=PyPDFLoader)
 raw_docs = loader.load()
-print(f"✅ Loaded {len(raw_docs)} pages")
+print(f"Loaded {len(raw_docs)} pages")
 
 # Step 2: Split into chunks
 splitter = RecursiveCharacterTextSplitter(
@@ -201,7 +201,7 @@ splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", ".", " ", ""]  # split priority order
 )
 chunks = splitter.split_documents(raw_docs)
-print(f"✅ Created {len(chunks)} chunks")
+print(f"Created {len(chunks)} chunks")
 
 # Step 3: Add metadata to each chunk (important for citations!)
 for i, chunk in enumerate(chunks):
@@ -219,7 +219,7 @@ vectorstore = Chroma.from_documents(
     persist_directory="./chroma_db"   # saves to disk!
 )
 vectorstore.persist()
-print("✅ Indexed and saved to ./chroma_db")
+print("Indexed and saved to ./chroma_db")
 ```
 
 ### Phase 2: Querying (Online)
